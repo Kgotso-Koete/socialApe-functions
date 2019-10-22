@@ -1,13 +1,14 @@
 const { admin, db } = require("../util/admin");
 const config = require("../util/config");
+const firebase = require("firebase");
+
+firebase.initializeApp(config);
+
 const {
   validateSignupData,
   validateLoginData,
   reduceUserDetails
 } = require("../util/validators");
-const firebase = require("firebase");
-
-firebase.initializeApp(config);
 
 // Sign users up
 exports.signup = (req, res) => {
@@ -63,7 +64,6 @@ exports.signup = (req, res) => {
       }
     });
 };
-
 // Log user in
 exports.login = (req, res) => {
   const user = {
@@ -109,6 +109,43 @@ exports.addUserDetails = (req, res) => {
     });
 };
 
+// Get any user's details
+exports.getUserDetails = (req, res) => {
+  let userData = {};
+  db.doc(`/users/${req.params.handle}`)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        userData.user = doc.data();
+        return db
+          .collection("screams")
+          .where("userHandle", "==", req.params.handle)
+          .orderBy("createdAt", "desc")
+          .get();
+      } else {
+        return res.status(404).json({ errror: "User not found" });
+      }
+    })
+    .then(data => {
+      userData.screams = [];
+      data.forEach(doc => {
+        userData.screams.push({
+          body: doc.data().body,
+          createdAt: doc.data().createdAt,
+          userHandle: doc.data().userHandle,
+          userImage: doc.data().userImage,
+          likeCount: doc.data().likeCount,
+          commentCount: doc.data().commentCount,
+          screamId: doc.id
+        });
+      });
+      return res.json(userData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
 // Get own user details
 exports.getAuthenticatedUser = (req, res) => {
   let userData = {};
@@ -128,6 +165,26 @@ exports.getAuthenticatedUser = (req, res) => {
       data.forEach(doc => {
         userData.likes.push(doc.data());
       });
+      return db
+        .collection("notifications")
+        .where("recipient", "==", req.user.handle)
+        .orderBy("createdAt", "desc")
+        .limit(10)
+        .get();
+    })
+    .then(data => {
+      userData.notifications = [];
+      data.forEach(doc => {
+        userData.notifications.push({
+          recipient: doc.data().recipient,
+          sender: doc.data().sender,
+          createdAt: doc.data().createdAt,
+          screamId: doc.data().screamId,
+          type: doc.data().type,
+          read: doc.data().read,
+          notificationId: doc.id
+        });
+      });
       return res.json(userData);
     })
     .catch(err => {
@@ -135,7 +192,6 @@ exports.getAuthenticatedUser = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
-
 // Upload a profile image for user
 exports.uploadImage = (req, res) => {
   const BusBoy = require("busboy");
@@ -145,19 +201,20 @@ exports.uploadImage = (req, res) => {
 
   const busboy = new BusBoy({ headers: req.headers });
 
-  let imageFileName;
   let imageToBeUploaded = {};
+  let imageFileName;
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
+    console.log(fieldname, file, filename, encoding, mimetype);
     if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
       return res.status(400).json({ error: "Wrong file type submitted" });
     }
-    // my.image.png
+    // my.image.png => ['my', 'image', 'png']
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
-    // 645235423674523.png
+    // 32756238461724837.png
     imageFileName = `${Math.round(
-      Math.random() * 100000000000
-    )}.${imageExtension}`;
+      Math.random() * 1000000000000
+    ).toString()}.${imageExtension}`;
     const filepath = path.join(os.tmpdir(), imageFileName);
     imageToBeUploaded = { filepath, mimetype };
     file.pipe(fs.createWriteStream(filepath));
@@ -179,12 +236,29 @@ exports.uploadImage = (req, res) => {
         return db.doc(`/users/${req.user.handle}`).update({ imageUrl });
       })
       .then(() => {
-        return res.json({ message: "Image uploaded successfully" });
+        return res.json({ message: "image uploaded successfully" });
       })
       .catch(err => {
         console.error(err);
-        return res.status(500).json({ error: err.code });
+        return res.status(500).json({ error: "something went wrong" });
       });
   });
   busboy.end(req.rawBody);
+};
+
+exports.markNotificationsRead = (req, res) => {
+  let batch = db.batch();
+  req.body.forEach(notificationId => {
+    const notification = db.doc(`/notifications/${notificationId}`);
+    batch.update(notification, { read: true });
+  });
+  batch
+    .commit()
+    .then(() => {
+      return res.json({ message: "Notifications marked read" });
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
 };
