@@ -2,6 +2,8 @@ const functions = require("firebase-functions");
 const app = require("express")();
 const FBAuth = require("./util/fbAuth");
 const { db } = require("./util/admin");
+const cors = require("cors");
+app.use(cors());
 
 const {
   getAllScreams,
@@ -66,7 +68,6 @@ exports.createNotificationOnLike = functions
       })
       .catch(err => console.error(err));
   });
-
 exports.deleteNotificationOnUnLike = functions
   .region("europe-west1")
   .firestore.document("likes/{id}")
@@ -79,7 +80,6 @@ exports.deleteNotificationOnUnLike = functions
         return;
       });
   });
-
 exports.createNotificationOnComment = functions
   .region("europe-west1")
   .firestore.document("comments/{id}")
