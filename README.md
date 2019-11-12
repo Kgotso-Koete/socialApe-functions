@@ -88,10 +88,15 @@ For now, the application will have the following user stories and corresponding 
     <br/>Back end: `app.post("/scream/:screamId/comment", FBAuth, commentOnScream);`
     <br/>Front end: `Scream` component with a pop up `ScreamDialog` component using path `/users/${userHandle}/scream/${screamId}`
 
+# Timesheet log
+
+- Version 1 (Classed Tutorial): 59 hours
+- Version 2 (personal modifications): ?
+
 #
 
 This web applicaion is built using React, Node & Firebase and is based on the SocialApe app ([back end repository](https://github.com/hidjou/classsed-react-firebase-functions), [front end repository](https://github.com/hidjou/classsed-react-firebase-client)) from the [Classed Full Stack React & Firebase tutorial series](https://www.youtube.com/watch?v=RkBfu-W7tt0&list=PLMhAeHCz8S38ryyeMiBPPUnFAiWnoPvWP) by [Ahmed Hadjou](https://github.com/hidjou)
 
-Special thanks to [Ahmed Hadjou](https://github.com/hidjou) for a great tutorial with a stunning app as a project.<br/>
-To be modified further by Kgotso Koete<br/>
+Special thanks to [Ahmed Hadjou](https://github.com/hidjou) for a great tutorial with a stunning app as a project.<br/><br/>
+To be modified further by Kgotso Koete<br/><br/>
 Johannesburg, October 2019
