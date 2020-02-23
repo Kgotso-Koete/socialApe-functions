@@ -60,38 +60,42 @@ For now, the application will have the following user stories and corresponding 
 
 ## Scream routes
 
-8. An unauthenticated user can get a list of posts
+8. An unauthenticated user can get a list of posts with the newest at the top
    <br/>Back end: `app.get("/screams", getAllScreams);`
    <br/>Frond end: `home` component displays feed with path `/`
 
-9. An authenticated user can create a new post
-   <br/>Back end: `app.post("/scream", FBAuth, postOneScream);`
-   <br/>Front end: `Navbar` component with an embedded `PostScream` component opens up dialog box, no path specified.
+9. An unauthenticated user can get a list of trending posts based on comment count
+   <br/>Back end: `app.get("/trending", getTrendingScreams);`
+   <br/>Frond end: `home` component displays feed with path `/trending`
 
-10. An unauthenticated user can get the details of a post to be displayed in a dialog box
+10. An authenticated user can create a new post
+    <br/>Back end: `app.post("/scream", FBAuth, postOneScream);`
+    <br/>Front end: `Navbar` component with an embedded `PostScream` component opens up dialog box, no path specified.
+
+11. An unauthenticated user can get the details of a post to be displayed in a dialog box
     <br/>Back end: `app.get("/scream/:screamId", getScream);`
     <br/>Front end: `Scream` component with a pop up `ScreamDialog` component using path `/users/${userHandle}/scream/${screamId}`
 
-11. An authenticated user can delete a post that they created
+12. An authenticated user can delete a post that they created
     <br/>Back end: `app.delete("/scream/:screamId", FBAuth, deleteScream);`
     <br/>Front end: `Scream` component with a pop up `DeleteScream` component without any path specification
 
-12. An authenticated user can like a post
+13. An authenticated user can like a post
     <br/>Back end: `app.get("/scream/:screamId/like", FBAuth, likeScream);`
     <br/>Front end: `Scream` component with an embedded `LikeButton` component without any path specification
 
-13. An authenticated user can unlike a post
+14. An authenticated user can unlike a post
     <br/>Back end: `app.get("/scream/:screamId/unlike", FBAuth, unlikeScream);`
     <br/>Front end: `Scream` component with an embedded `LikeButton` component without any path specification
 
-14. An authenticated user can comment on a post and read other comments displayed
+15. An authenticated user can comment on a post and read other comments displayed
     <br/>Back end: `app.post("/scream/:screamId/comment", FBAuth, commentOnScream);`
     <br/>Front end: `Scream` component with a pop up `ScreamDialog` component using path `/users/${userHandle}/scream/${screamId}`
 
 # Timesheet log
 
 - Version 1 (Classed Tutorial): 59 hours
-- Version 2 (personal modifications): ?
+- Version 2 (personal modifications): 0.75 hours - adding trending route
 
 #
 

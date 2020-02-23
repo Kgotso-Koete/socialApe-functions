@@ -7,6 +7,7 @@ app.use(cors());
 
 const {
   getAllScreams,
+  getTrendingScreams,
   postOneScream,
   getScream,
   commentOnScream,
@@ -26,6 +27,7 @@ const {
 
 // Scream routes
 app.get("/screams", getAllScreams);
+app.get("/trending", getTrendingScreams);
 app.post("/scream", FBAuth, postOneScream);
 app.get("/scream/:screamId", getScream);
 app.delete("/scream/:screamId", FBAuth, deleteScream);
