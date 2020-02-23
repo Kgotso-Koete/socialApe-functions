@@ -6,7 +6,11 @@ This code is for the back end. The front end code I wrote can be found [here](ht
 
 # How to run the code:
 
-The app is deployed on Google Firebase. Here is the [demo](https://socialape-69760.firebaseapp.com)
+The back end is deployed on Google Firebase. Here is the [demo](https://socialape-69760.firebaseapp.com)
+
+## Screen shot of the application
+
+![](/screenshots/SocialApe_screenshot.png)
 
 ## 1: API Base URL
 
