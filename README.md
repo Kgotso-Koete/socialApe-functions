@@ -4,6 +4,9 @@ This is the code I wrote following the Classed tutorial on building a social net
 
 This code is for the back end. The front end code I wrote can be found [here](https://github.com/Kgotso-Koete/socialApe-react-firebase-client).
 
+# Stack
+1. Firebase tools 7.7.0
+
 # How to run the code:
 
 The back end is deployed on Google Firebase. Here is the [demo](https://socialape-69760.firebaseapp.com)
